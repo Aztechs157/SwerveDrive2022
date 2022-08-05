@@ -13,6 +13,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Shuffle;
+
 import static frc.robot.lib.ExpectDouble.expect;
 
 public class Drive extends SubsystemBase {
@@ -27,10 +29,6 @@ public class Drive extends SubsystemBase {
         final var tab = Shuffleboard.getTab("aaaaaaaaa");
         tab.addNumber("Encoder Spin", encoderSpin::getAnalogIn);
         tab.addNumber("Encoder Spin Degrees", this::getSpin);
-        // tab.addBoolean("Direction", () -> !this.reversed);
-        // tab.addNumber("Initial Delta", () -> this.initialDelta);
-        // tab.addNumber("Shortest Delta", () -> this.shortestDelta);
-        // tab.addNumber("PID Output", () -> this.pidValue);
     }
 
     public double getSpin() {
@@ -62,53 +60,57 @@ public class Drive extends SubsystemBase {
     }
 
     public void runSuperDegreeRoutine(final double target) {
-        computeInitialDelta(target);
-        computeShortestDelta();
-        spinPid();
+        final var initialDelta = computeInitialDelta(target);
+        Shuffle.initialDelta.setNumber(initialDelta);
+
+        final var shortestDelta = computeShortestDelta(initialDelta);
+        Shuffle.shortestDelta.setNumber(shortestDelta);
+        Shuffle.direction.setBoolean(!reversed);
+
+        final var pidValue = spinPid(shortestDelta);
+        Shuffle.pidOutput.setNumber(pidValue);
+        spin(pidValue);
     }
 
-    private double initialDelta = 0;
-
-    private void computeInitialDelta(final double target) {
+    private double computeInitialDelta(final double target) {
         final double initial = getSpin();
 
         expect(target).greaterOrEqual(0).lessOrEqual(360);
         expect(initial).greaterOrEqual(0).lessOrEqual(360);
 
-        double angle = target - initial;
-        expect(angle).greaterThan(-360).lessOrEqual(360);
+        var initialDelta = target - initial;
+        expect(initialDelta).greaterThan(-360).lessOrEqual(360);
 
-        if (angle < 0) {
-            angle += 360;
+        if (initialDelta < 0) {
+            initialDelta += 360;
         }
-        expect(angle).greaterThan(0).lessOrEqual(360);
+        expect(initialDelta).greaterThan(0).lessOrEqual(360);
 
-        initialDelta = angle;
+        return initialDelta;
     }
 
-    private double shortestDelta = 0;
-
-    private void computeShortestDelta() {
+    private double computeShortestDelta(final double initialDelta) {
         expect(initialDelta).greaterOrEqual(0).lessOrEqual(360);
 
         if (initialDelta < 90) {
-            shortestDelta = initialDelta;
             reversed = false;
+            return initialDelta;
+
         } else if (initialDelta < 270) {
-            shortestDelta = initialDelta - 180;
             reversed = true;
+            return initialDelta - 180;
+
         } else if (initialDelta <= 360) {
-            shortestDelta = initialDelta - 360;
             reversed = false;
+            return initialDelta - 360;
         }
+
+        throw new RuntimeException("Above expect() should have covered this.");
     }
 
     private PIDController pid = new PIDController(0.001, 0, 0);
 
-    private double pidValue = 0;
-
-    private void spinPid() {
-        pidValue = pid.calculate(getSpin() + shortestDelta, getSpin());
-        spin(pidValue);
+    private double spinPid(final double shortestDelta) {
+        return pid.calculate(getSpin() + shortestDelta, getSpin());
     }
 }
