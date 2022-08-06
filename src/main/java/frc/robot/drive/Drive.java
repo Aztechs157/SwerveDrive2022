@@ -4,14 +4,13 @@
 
 package frc.robot.drive;
 
-import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Shuffle;
@@ -23,26 +22,19 @@ public class Drive extends SubsystemBase {
     private final CANSparkMax motorRoll = new CANSparkMax(Constants.MOTOR_ROLL_ID, MotorType.kBrushless);
 
     // Lamprey1 Absolute Encoder
-    private final SensorCollection encoderSpin = new TalonSRX(Constants.ENCODER_ID).getSensorCollection();
-
-    /** Creates a new Drive. */
-    public Drive() {
-        final var tab = Shuffleboard.getTab("aaaaaaaaa");
-        tab.addNumber("Encoder Spin", encoderSpin::getAnalogIn);
-        tab.addNumber("Encoder Spin Degrees", this::getSpin);
-    }
+    private final SparkMaxAnalogSensor encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
 
     public double getSpin() {
-        final double raw = encoderSpin.getAnalogIn();
-        final double revolutions = raw / Constants.ENCODER_COUNT_PER_REV;
-        double degrees = (revolutions * 360.0) % 360;
+        final double volts = encoderSpin.getPosition();
+        double degrees = volts * Constants.VOLTS_TO_DEGREES;
+        degrees %= 360;
 
         if (degrees < 0) {
             degrees += 360;
         }
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);
-
+        Shuffle.encoderSpin.setNumber(degrees);
         return degrees;
     }
 

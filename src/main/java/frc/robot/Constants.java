@@ -23,7 +23,7 @@ public final class Constants {
 
     public static final int JOYSTICK_ID = 0;
 
-    public static final int ENCODER_COUNT_PER_REV = 1024;
+    public static final double VOLTS_TO_DEGREES = 360 / 3.3;
 
     public static final double TELEOP_ROLL_SPEED = 1.00;
     public static final double TELEOP_AXIS_THRESHOLD = 0.1;
