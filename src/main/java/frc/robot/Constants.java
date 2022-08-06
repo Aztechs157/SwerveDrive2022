@@ -24,4 +24,11 @@ public final class Constants {
     public static final int JOYSTICK_ID = 0;
 
     public static final int ENCODER_COUNT_PER_REV = 1024;
+
+    public static final double TELEOP_ROLL_SPEED = 1.00;
+    public static final double TELEOP_AXIS_THRESHOLD = 0.1;
+
+    public static final double ROLL_SLEW_RATE = 1;
+    public static final double SPIN_SLEW_RATE = 1;
+    public static final double SPIN_KP = 0.0025;
 }

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -40,7 +41,7 @@ public class Drive extends SubsystemBase {
             degrees += 360;
         }
 
-        expect(degrees).greaterOrEqual(0).lessThan(360);
+        expect(degrees).greaterOrEqual(0).lessOrEqual(360);
 
         return degrees;
     }
@@ -49,13 +50,14 @@ public class Drive extends SubsystemBase {
         motorSpin.set(speed);
     }
 
+    private final SlewRateLimiter rollSlewRate = new SlewRateLimiter(Constants.ROLL_SLEW_RATE);
     private boolean reversed = false;
 
     public void roll(final double speed) {
         if (reversed) {
-            motorRoll.set(-speed);
+            motorRoll.set(rollSlewRate.calculate(-speed));
         } else {
-            motorRoll.set(speed);
+            motorRoll.set(rollSlewRate.calculate(speed));
         }
     }
 
@@ -67,9 +69,9 @@ public class Drive extends SubsystemBase {
         Shuffle.shortestDelta.setNumber(shortestDelta);
         Shuffle.direction.setBoolean(!reversed);
 
-        final var pidValue = spinPid(shortestDelta);
-        Shuffle.pidOutput.setNumber(pidValue);
-        spin(pidValue);
+        final var pidOutput = computeSpinPidOutput(shortestDelta);
+        Shuffle.pidOutput.setNumber(pidOutput);
+        spin(pidOutput);
     }
 
     private double computeInitialDelta(final double target) {
@@ -79,12 +81,12 @@ public class Drive extends SubsystemBase {
         expect(initial).greaterOrEqual(0).lessOrEqual(360);
 
         var initialDelta = target - initial;
-        expect(initialDelta).greaterThan(-360).lessOrEqual(360);
+        expect(initialDelta).greaterOrEqual(-360).lessOrEqual(360);
 
         if (initialDelta < 0) {
             initialDelta += 360;
         }
-        expect(initialDelta).greaterThan(0).lessOrEqual(360);
+        expect(initialDelta).greaterOrEqual(0).lessOrEqual(360);
 
         return initialDelta;
     }
@@ -108,9 +110,10 @@ public class Drive extends SubsystemBase {
         throw new RuntimeException("Above expect() should have covered this.");
     }
 
-    private PIDController pid = new PIDController(0.001, 0, 0);
+    private final PIDController spinPid = new PIDController(Constants.SPIN_KP, 0, 0);
+    private final SlewRateLimiter spinSlewRate = new SlewRateLimiter(Constants.SPIN_SLEW_RATE);
 
-    private double spinPid(final double shortestDelta) {
-        return pid.calculate(getSpin() + shortestDelta, getSpin());
+    private double computeSpinPidOutput(final double shortestDelta) {
+        return spinSlewRate.calculate(spinPid.calculate(getSpin() + shortestDelta, getSpin()));
     }
 }
