@@ -24,7 +24,7 @@ public class Drive extends SubsystemBase {
     // Lamprey1 Absolute Encoder
     private final SparkMaxAnalogSensor encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
 
-    public double getSpin() {
+    public double getCurrentSpin() {
         final double volts = encoderSpin.getPosition();
         double degrees = volts * Constants.VOLTS_TO_DEGREES;
         degrees %= 360;
@@ -67,7 +67,7 @@ public class Drive extends SubsystemBase {
     }
 
     private double computeInitialDelta(final double target) {
-        final double initial = getSpin();
+        final double initial = getCurrentSpin();
 
         expect(target).greaterOrEqual(0).lessOrEqual(360);
         expect(initial).greaterOrEqual(0).lessOrEqual(360);
@@ -106,6 +106,8 @@ public class Drive extends SubsystemBase {
     private final SlewRateLimiter spinSlewRate = new SlewRateLimiter(Constants.SPIN_SLEW_RATE);
 
     private double computeSpinPidOutput(final double shortestDelta) {
-        return spinSlewRate.calculate(spinPid.calculate(getSpin() + shortestDelta, getSpin()));
+        final var pidOutput = spinPid.calculate(getCurrentSpin() + shortestDelta, getCurrentSpin());
+        final var slewOutput = spinSlewRate.calculate(pidOutput);
+        return slewOutput;
     }
 }
