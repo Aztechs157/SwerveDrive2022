@@ -35,7 +35,7 @@ public class DegreeDrive extends CommandBase {
         }
 
         final var angle = Math.toDegrees(Math.atan2(y, x)) + 180;
-        drive.runSuperDegreeRoutine(angle);
+        drive.spin(angle);
 
         final var length = Math.sqrt((x * x) + (y * y));
         final var speed = Math.min(1, length) * Constants.TELEOP_ROLL_SPEED;
