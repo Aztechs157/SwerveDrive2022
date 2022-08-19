@@ -25,6 +25,11 @@ public class SwervePod {
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
     }
 
+    public void stop() {
+        directSpin(0);
+        roll(0);
+    }
+
     private final SlewRateLimiter rollSlewRate = new SlewRateLimiter(Constants.ROLL_SLEW_RATE);
     private boolean reversed = false;
 
@@ -36,7 +41,7 @@ public class SwervePod {
         }
     }
 
-    public double getCurrentSpin() {
+    private double getCurrentSpin() {
         final double volts = encoderSpin.getPosition();
         double degrees = volts * Constants.VOLTS_TO_DEGREES;
         degrees %= 360;
@@ -50,7 +55,7 @@ public class SwervePod {
         return degrees;
     }
 
-    public void directSpin(final double speed) {
+    private void directSpin(final double speed) {
         motorSpin.set(speed);
     }
 

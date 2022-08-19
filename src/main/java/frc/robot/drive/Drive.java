@@ -17,4 +17,8 @@ public class Drive extends SubsystemBase {
     public void roll(final double speed) {
         swervePod.roll(speed);
     }
+
+    public void stop() {
+        swervePod.stop();
+    }
 }

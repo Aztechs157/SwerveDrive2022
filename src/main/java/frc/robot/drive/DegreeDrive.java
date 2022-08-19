@@ -29,8 +29,7 @@ public class DegreeDrive extends CommandBase {
                 || Math.abs(y) > Constants.TELEOP_AXIS_THRESHOLD;
 
         if (!aboveThreshold) {
-            drive.spin(0);
-            drive.roll(0);
+            drive.stop();
             return;
         }
 
