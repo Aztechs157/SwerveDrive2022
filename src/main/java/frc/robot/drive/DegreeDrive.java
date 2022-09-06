@@ -4,6 +4,8 @@
 
 package frc.robot.drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -34,10 +36,11 @@ public class DegreeDrive extends CommandBase {
         }
 
         final var angle = Math.toDegrees(Math.atan2(y, x)) + 180;
-        drive.spin(angle);
 
         final var length = Math.sqrt((x * x) + (y * y));
         final var speed = Math.min(1, length) * Constants.TELEOP_ROLL_SPEED;
-        drive.roll(speed);
+
+        final var state = new SwerveModuleState(speed, Rotation2d.fromDegrees(angle));
+        drive.set(state);
     }
 }

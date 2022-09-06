@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <script type="module">
+        /** @type HTMLCanvasElement */
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        const fillRectangle = ({ style, x, y, width, height }) => {
+            context.fillStyle = style;
+            context.fillRect(x, y, width, height);
+        };
+
+        const clearScreen = () => fillRectangle({ x: 0, y: 0, width: canvas.width, height: canvas.height, style: 'black' });
+
+        const drawRobotFrame = ({ robot }) => fillRectangle(robot);
+
+        const toRadians = (degrees) => degrees * (Math.PI / 180);
+
+        const drawVector = ({ x, y, length, width, angle, style }) => {
+            context.strokeStyle = style;
+            context.lineWidth = width;
+            context.beginPath();
+            context.moveTo(x, y);
+            context.lineTo(
+                x + length * Math.cos(toRadians(angle)),
+                y + length * Math.sin(toRadians(angle)),
+            );
+            context.stroke();
+        };
+
+        const drawRobotWheel = ({ robot }, wheel) => {
+            drawVector({
+                ...wheel,
+                x: robot.x + wheel.x,
+                y: robot.y + wheel.y,
+            });
+        };
+
+        const draw = (state) => {
+            clearScreen();
+            drawRobotFrame(state);
+            for (const wheel of state.wheels)
+                drawRobotWheel(state, wheel);
+        };
+
+        const updateTime = ({ time }) => {
+            time.last ??= time.current;
+            time.delta = time.current - time.last;
+            time.last = time.current;
+        };
+
+        const updateRobot = ({ robot, keys, time }) => {
+            const speed = robot.speed * time.delta;
+            if (keys.has('w')) robot.y -= speed;
+            if (keys.has('a')) robot.x -= speed;
+            if (keys.has('s')) robot.y += speed;
+            if (keys.has('d')) robot.x += speed;
+        };
+
+        const updateWheel = ({ keys, time }, wheel) => {
+            const speed = wheel.speed * time.delta;
+            if (keys.has("ArrowLeft")) wheel.angle -= speed;
+            if (keys.has("ArrowRight")) wheel.angle += speed;
+
+            if (wheel.angle > 360) wheel.angle -= 360;
+            if (wheel.angle < 0) wheel.angle += 360;
+        };
+
+        const update = (state) => {
+            updateTime(state);
+            updateRobot(state);
+            for (const wheel of state.wheels)
+                updateWheel(state, wheel);
+        };
+
+        const wheelBase = {
+            angle: 270,
+            speed: .1,
+
+            length: 30,
+            width: 5,
+            style: 'lightblue',
+        };
+
+        const state = {
+            time: {
+                last: null,
+                current: null,
+                delta: null,
+            },
+            keys: new Set(),
+            robot: {
+                x: 450,
+                y: 450,
+                speed: 1,
+
+                width: 100,
+                height: 100,
+                style: 'red',
+            },
+            wheels: [{
+                x: 0,
+                y: 0,
+                ...wheelBase,
+            }, {
+                x: 100,
+                y: 0,
+                ...wheelBase,
+            }, {
+                x: 0,
+                y: 100,
+                ...wheelBase,
+            }, {
+                x: 100,
+                y: 100,
+                ...wheelBase,
+            }],
+        };
+
+        const main = (current) => {
+            state.time.current = current;
+            update(state);
+            draw(state);
+            requestAnimationFrame(main);
+        };
+        requestAnimationFrame(main);
+
+        addEventListener('keydown', event => state.keys.add(event.key));
+        addEventListener('keyup', event => state.keys.delete(event.key));
+    </script>
+</body>
+
+</html>

@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants;
 import frc.robot.Shuffle;
 
@@ -25,6 +26,11 @@ public class SwervePod {
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
     }
 
+    public void set(final SwerveModuleState state) {
+        roll(state.speedMetersPerSecond);
+        spin(state.angle.getDegrees());
+    }
+
     public void stop() {
         directSpin(0);
         roll(0);
@@ -33,7 +39,7 @@ public class SwervePod {
     private final SlewRateLimiter rollSlewRate = new SlewRateLimiter(Constants.ROLL_SLEW_RATE);
     private boolean reversed = false;
 
-    public void roll(final double speed) {
+    private void roll(final double speed) {
         if (reversed) {
             motorRoll.set(rollSlewRate.calculate(-speed));
         } else {
@@ -59,7 +65,7 @@ public class SwervePod {
         motorSpin.set(speed);
     }
 
-    public void spin(final double target) {
+    private void spin(final double target) {
         final var initialDelta = computeInitialDelta(target);
         Shuffle.initialDelta.setNumber(initialDelta);
 

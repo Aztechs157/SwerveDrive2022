@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
  * numerical or boolean
@@ -31,4 +33,12 @@ public final class Constants {
     public static final double ROLL_SLEW_RATE = 1;
     public static final double SPIN_SLEW_RATE = 1;
     public static final double SPIN_KP = 0.0025;
+
+    public static final double CENTER_TO_POD = 0.707;
+    public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(CENTER_TO_POD, CENTER_TO_POD);
+    public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(CENTER_TO_POD, -CENTER_TO_POD);
+    public static final Translation2d BACK_LEFT_LOCATION = new Translation2d(-CENTER_TO_POD, CENTER_TO_POD);
+    public static final Translation2d BACk_RIGHT_LOCATION = new Translation2d(-CENTER_TO_POD, -CENTER_TO_POD);
+    public static final Translation2d[] WHEEL_LOCATIONS = new Translation2d[] {
+            FRONT_LEFT_LOCATION, FRONT_RIGHT_LOCATION, BACK_LEFT_LOCATION, BACk_RIGHT_LOCATION };
 }
