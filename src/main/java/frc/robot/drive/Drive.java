@@ -33,7 +33,7 @@ public class Drive extends SubsystemBase {
 
     private final SendableChooser<Integer> chooser = new SendableChooser<>();
     {
-        chooser.addOption("Front Left", 0);
+        chooser.setDefaultOption("Front Left", 0);
         chooser.addOption("Front Right", 1);
         chooser.addOption("Back Left", 2);
         chooser.addOption("Back Right", 3);

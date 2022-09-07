@@ -28,7 +28,7 @@ public class SwervePod {
 
     public void set(final SwerveModuleState state) {
         roll(state.speedMetersPerSecond);
-        spin(state.angle.getDegrees());
+        spin(wrapDegrees(state.angle.getDegrees()));
     }
 
     public void stop() {
@@ -47,14 +47,20 @@ public class SwervePod {
         }
     }
 
-    private double getCurrentSpin() {
-        final double volts = encoderSpin.getPosition();
-        double degrees = volts * Constants.VOLTS_TO_DEGREES;
-        degrees %= 360;
+    public double wrapDegrees(final double degrees) {
+        var wrapped = degrees % 360;
 
-        if (degrees < 0) {
-            degrees += 360;
+        if (wrapped < 0) {
+            wrapped += 360;
         }
+
+        expect(wrapped).greaterOrEqual(0).lessOrEqual(360);
+        return wrapped;
+    }
+
+    private double getCurrentSpin() {
+        final var volts = encoderSpin.getPosition();
+        final var degrees = wrapDegrees(volts * Constants.VOLTS_TO_DEGREES);
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);
         Shuffle.encoderSpin.setNumber(degrees);

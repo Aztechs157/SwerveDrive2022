@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.drive.DegreeDrive;
 import frc.robot.drive.Drive;
+import frc.robot.drive.FullDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -29,7 +30,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        drive.setDefaultCommand(new DegreeDrive(drive, joystick));
+        drive.setDefaultCommand(new FullDrive(drive, joystick));
 
         // Configure the button bindings
         configureButtonBindings();

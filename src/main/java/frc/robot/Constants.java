@@ -29,6 +29,7 @@ public final class Constants {
 
     public static final double TELEOP_ROLL_SPEED = 1.00;
     public static final double TELEOP_AXIS_THRESHOLD = 0.1;
+    public static final double TELEOP_SPIN_SPEED = 20;
 
     public static final double ROLL_SLEW_RATE = 1;
     public static final double SPIN_SLEW_RATE = 1;
