@@ -4,8 +4,6 @@
 
 package frc.robot.drive;
 
-import java.util.Map;
-
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -42,6 +40,7 @@ public class Drive extends SubsystemBase {
             speeds[i] = layout.add("Speed", 0).getEntry();
             angles[i] = layout.add("Angle", 0).getEntry();
         }
+        Shuffle.driveTab.addNumber("Roll Distance", swervePod::getRawRoll);
     }
 
     public void set(final SwerveModuleState state) {

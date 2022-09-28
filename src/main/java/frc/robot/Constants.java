@@ -35,6 +35,10 @@ public final class Constants {
     public static final double SPIN_SLEW_RATE = 1;
     public static final double SPIN_KP = 0.0025;
 
+    public static final double FEET_PER_WHEEL_TURN = 1.1;
+    public static final double MOTOR_TURNS_PER_WHEEL_TURN = 7;
+    public static final double SPIN_ROTATIONS_PER_FOOT = FEET_PER_WHEEL_TURN / MOTOR_TURNS_PER_WHEEL_TURN;
+
     public static final double CENTER_TO_POD = 0.707;
     public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(CENTER_TO_POD, CENTER_TO_POD);
     public static final Translation2d FRONT_RIGHT_LOCATION = new Translation2d(CENTER_TO_POD, -CENTER_TO_POD);

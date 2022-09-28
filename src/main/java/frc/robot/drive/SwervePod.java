@@ -24,6 +24,7 @@ public class SwervePod {
         motorRoll = new CANSparkMax(motorRollId, MotorType.kBrushless);
         motorSpin = new CANSparkMax(motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
+        motorRoll.getEncoder().setPositionConversionFactor(Constants.SPIN_ROTATIONS_PER_FOOT);
     }
 
     public void set(final SwerveModuleState state) {
@@ -45,6 +46,10 @@ public class SwervePod {
         } else {
             motorRoll.set(rollSlewRate.calculate(speed));
         }
+    }
+
+    public double getRawRoll() {
+        return motorRoll.getEncoder().getPosition();
     }
 
     public double wrapDegrees(final double degrees) {
