@@ -40,19 +40,19 @@ public class SwervePod {
     private final SlewRateLimiter rollSlewRate = new SlewRateLimiter(Constants.ROLL_SLEW_RATE);
     private boolean reversed = false;
 
-    private void roll(final double speed) {
+    private void roll(double speed) {
         if (reversed) {
-            motorRoll.set(rollSlewRate.calculate(-speed));
-        } else {
-            motorRoll.set(rollSlewRate.calculate(speed));
+            speed = -speed;
         }
+
+        motorRoll.set(rollSlewRate.calculate(speed));
     }
 
     public double getRawRoll() {
         return motorRoll.getEncoder().getPosition();
     }
 
-    public double wrapDegrees(final double degrees) {
+    private double wrapDegrees(final double degrees) {
         var wrapped = degrees % 360;
 
         if (wrapped < 0) {

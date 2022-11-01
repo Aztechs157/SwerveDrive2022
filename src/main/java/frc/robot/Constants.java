@@ -21,7 +21,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
     public static final int MOTOR_SPIN_ID = 4;
     public static final int MOTOR_ROLL_ID = 3;
-    public static final int ENCODER_ID = 17;
 
     public static final int JOYSTICK_ID = 0;
 
