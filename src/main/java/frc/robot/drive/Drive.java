@@ -15,7 +15,7 @@ import frc.robot.Constants;
 import frc.robot.Shuffle;
 
 public class Drive extends SubsystemBase {
-    public SwervePod swervePod = new SwervePod(Constants.MOTOR_ROLL_ID, Constants.MOTOR_SPIN_ID);
+    public SwervePod swervePod = new SwervePod(Constants.FRONT_LEFT_CONFIG);
 
     public void set(final ChassisSpeeds speeds) {
         final var states = kinematics.toSwerveModuleStates(speeds);
@@ -44,6 +44,8 @@ public class Drive extends SubsystemBase {
     }
 
     public void set(final SwerveModuleState state) {
+        this.speeds[0].setNumber(state.speedMetersPerSecond);
+        this.angles[0].setNumber(state.angle.getDegrees());
         swervePod.set(state);
     }
 

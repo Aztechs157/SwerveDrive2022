@@ -14,22 +14,41 @@ import frc.robot.Shuffle;
 import static frc.robot.lib.ExpectDouble.expect;
 
 public class SwervePod {
+    public static class Config {
+        public final int motorSpinId;
+        public final int motorRollId;
+
+        public Config(final int motorSpinId, final int motorRollId) {
+            this.motorSpinId = motorSpinId;
+            this.motorRollId = motorRollId;
+        }
+    }
+
     private final CANSparkMax motorRoll;
     private final CANSparkMax motorSpin;
 
     // Lamprey1 Absolute Encoder
     private final SparkMaxAnalogSensor encoderSpin;
 
-    public SwervePod(final int motorRollId, final int motorSpinId) {
-        motorRoll = new CANSparkMax(motorRollId, MotorType.kBrushless);
-        motorSpin = new CANSparkMax(motorSpinId, MotorType.kBrushless);
+    public SwervePod(final Config config) {
+        motorRoll = new CANSparkMax(config.motorRollId, MotorType.kBrushless);
+        motorSpin = new CANSparkMax(config.motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
         motorRoll.getEncoder().setPositionConversionFactor(Constants.SPIN_ROTATIONS_PER_FOOT);
+        motorRoll.setIdleMode(Constants.ROLL_IDLE_MODE);
+        motorSpin.setIdleMode(Constants.SPIN_IDLE_MODE);
     }
 
     public void set(final SwerveModuleState state) {
         roll(state.speedMetersPerSecond);
         spin(wrapDegrees(state.angle.getDegrees()));
+    }
+
+    public void directSet(final double rollSpeed, final double spinSpeed) {
+        getCurrentSpin();
+
+        roll(rollSpeed);
+        directSpin(spinSpeed);
     }
 
     public void stop() {

@@ -4,7 +4,10 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.drive.SwervePod;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -19,20 +22,25 @@ import edu.wpi.first.math.geometry.Translation2d;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final int MOTOR_SPIN_ID = 4;
-    public static final int MOTOR_ROLL_ID = 3;
+    public static final SwervePod.Config FRONT_LEFT_CONFIG = new SwervePod.Config(1, 2);
+    public static final SwervePod.Config FRONT_RIGHT_CONFIG = new SwervePod.Config(3, 4);
+    public static final SwervePod.Config BACK_LEFT_CONFIG = new SwervePod.Config(5, 6);
+    public static final SwervePod.Config BACK_RIGHT_CONFIG = new SwervePod.Config(7, 8);
 
     public static final int JOYSTICK_ID = 0;
 
     public static final double VOLTS_TO_DEGREES = 360 / 3.3;
 
-    public static final double TELEOP_ROLL_SPEED = 1.00;
+    public static final double TELEOP_ROLL_SPEED = 1.0 / 3 / 3;
     public static final double TELEOP_AXIS_THRESHOLD = 0.1;
-    public static final double TELEOP_SPIN_SPEED = 20;
+    public static final double TELEOP_SPIN_SPEED = 1.0 / 3 / 3;
 
     public static final double ROLL_SLEW_RATE = 1;
     public static final double SPIN_SLEW_RATE = 1;
     public static final double SPIN_KP = 0.0025;
+
+    public static final IdleMode ROLL_IDLE_MODE = IdleMode.kBrake;
+    public static final IdleMode SPIN_IDLE_MODE = IdleMode.kCoast;
 
     public static final double FEET_PER_WHEEL_TURN = 1.1;
     public static final double MOTOR_TURNS_PER_WHEEL_TURN = 7;
