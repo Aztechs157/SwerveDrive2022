@@ -29,7 +29,7 @@ public final class Constants {
 
     public static final int JOYSTICK_ID = 0;
 
-    public static final double VOLTS_TO_DEGREES = 360 / 3.3;
+    public static final double SPIN_ENCODER_VOLTS_TO_DEGREES = 360 / 3.3;
 
     public static final double TELEOP_ROLL_SPEED = 1.0 / 3 / 3;
     public static final double TELEOP_AXIS_THRESHOLD = 0.1;
@@ -42,9 +42,9 @@ public final class Constants {
     public static final IdleMode ROLL_IDLE_MODE = IdleMode.kBrake;
     public static final IdleMode SPIN_IDLE_MODE = IdleMode.kCoast;
 
-    public static final double FEET_PER_WHEEL_TURN = 1.1;
-    public static final double MOTOR_TURNS_PER_WHEEL_TURN = 7;
-    public static final double SPIN_ROTATIONS_PER_FOOT = FEET_PER_WHEEL_TURN / MOTOR_TURNS_PER_WHEEL_TURN;
+    public static final double FEET_PER_ROLL_WHEEL_TURN = 1.1;
+    public static final double MOTOR_TURNS_PER_ROLL_WHEEL_TURN = 7;
+    public static final double ROLL_ROTATIONS_PER_FOOT = FEET_PER_ROLL_WHEEL_TURN / MOTOR_TURNS_PER_ROLL_WHEEL_TURN;
 
     public static final double CENTER_TO_POD = 0.707;
     public static final Translation2d FRONT_LEFT_LOCATION = new Translation2d(CENTER_TO_POD, CENTER_TO_POD);
