@@ -27,6 +27,8 @@ public class SwervePod {
     private final CANSparkMax motorRoll;
     private final CANSparkMax motorSpin;
 
+    public boolean debug = false;
+
     // Lamprey1 Absolute Encoder
     private final SparkMaxAnalogSensor encoderSpin;
 
@@ -84,11 +86,15 @@ public class SwervePod {
 
     private double getCurrentSpin() {
         final var volts = encoderSpin.getPosition();
-        Shuffle.spinVolts.setNumber(volts);
+        if (debug) {
+            Shuffle.spinVolts.setNumber(volts);
+        }
         final var degrees = wrapDegrees(volts * Constants.SPIN_ENCODER_VOLTS_TO_DEGREES);
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);
-        Shuffle.encoderSpin.setNumber(degrees);
+        if (debug) {
+            Shuffle.encoderSpin.setNumber(degrees);
+        }
         return degrees;
     }
 
@@ -98,14 +104,20 @@ public class SwervePod {
 
     private void spin(final double target) {
         final var initialDelta = computeInitialDelta(target);
-        Shuffle.initialDelta.setNumber(initialDelta);
+        if (debug) {
+            Shuffle.initialDelta.setNumber(initialDelta);
+        }
 
         final var shortestDelta = computeShortestDelta(initialDelta);
-        Shuffle.shortestDelta.setNumber(shortestDelta);
-        Shuffle.direction.setBoolean(!reversed);
+        if (debug) {
+            Shuffle.shortestDelta.setNumber(shortestDelta);
+            Shuffle.direction.setBoolean(!reversed);
+        }
 
         final var pidOutput = computeSpinPidOutput(shortestDelta);
-        Shuffle.pidOutput.setNumber(pidOutput);
+        if (debug) {
+            Shuffle.pidOutput.setNumber(pidOutput);
+        }
         directSpin(pidOutput);
     }
 

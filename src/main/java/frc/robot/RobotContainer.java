@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.drive.DegreeDrive;
-import frc.robot.drive.DirectDrive;
 import frc.robot.drive.Drive;
 import frc.robot.drive.FullDrive;
 
@@ -31,7 +29,7 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        drive.setDefaultCommand(new DirectDrive(drive, joystick));
+        drive.setDefaultCommand(new FullDrive(drive, joystick));
 
         // Configure the button bindings
         configureButtonBindings();
