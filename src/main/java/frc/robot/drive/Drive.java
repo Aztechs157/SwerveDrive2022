@@ -15,7 +15,13 @@ import frc.robot.Constants;
 import frc.robot.Shuffle;
 
 public class Drive extends SubsystemBase {
-    public SwervePod swervePod = new SwervePod(Constants.FRONT_RIGHT_CONFIG);
+    public SwervePod[] swervePods = new SwervePod[] {
+            new SwervePod(Constants.FRONT_LEFT_CONFIG),
+            new SwervePod(Constants.FRONT_RIGHT_CONFIG),
+            new SwervePod(Constants.BACK_LEFT_CONFIG),
+            new SwervePod(Constants.BACK_RIGHT_CONFIG),
+
+    };
 
     public void set(final ChassisSpeeds speeds) {
         final var states = kinematics.toSwerveModuleStates(speeds);
@@ -23,10 +29,9 @@ public class Drive extends SubsystemBase {
         for (var i = 0; i < states.length; i++) {
             this.speeds[i].setNumber(states[i].speedMetersPerSecond);
             this.angles[i].setNumber(states[i].angle.getDegrees());
-        }
 
-        final var state = states[chooser.getSelected()];
-        set(state);
+            swervePods[i].set(states[i]);
+        }
     }
 
     private final NetworkTableEntry[] speeds = new NetworkTableEntry[] { null, null, null, null };
@@ -40,17 +45,20 @@ public class Drive extends SubsystemBase {
             speeds[i] = layout.add("Speed", 0).getEntry();
             angles[i] = layout.add("Angle", 0).getEntry();
         }
-        Shuffle.driveTab.addNumber("Roll Distance", swervePod::getRawRoll);
     }
 
     public void set(final SwerveModuleState state) {
-        this.speeds[0].setNumber(state.speedMetersPerSecond);
-        this.angles[0].setNumber(state.angle.getDegrees());
-        swervePod.set(state);
+        this.speeds[chooser.getSelected()].setNumber(state.speedMetersPerSecond);
+        this.angles[chooser.getSelected()].setNumber(state.angle.getDegrees());
+        swervePods[chooser.getSelected()].set(state);
     }
 
     public void stop() {
-        swervePod.stop();
+        swervePods[chooser.getSelected()].stop();
+    }
+
+    public void directSet(final double rollSpeed, final double spinSpeed) {
+        swervePods[chooser.getSelected()].directSet(rollSpeed, spinSpeed);
     }
 
     private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(Constants.WHEEL_LOCATIONS);
