@@ -14,6 +14,7 @@ public class Shuffle {
     public static final NetworkTableEntry shortestDelta = driveTab.add("Shortest Delta", 0).getEntry();
     public static final NetworkTableEntry direction = driveTab.add("Direction", false).getEntry();
     public static final NetworkTableEntry pidOutput = driveTab.add("PID Output", 0).getEntry();
+    public static final NetworkTableEntry spinVolts = driveTab.add("Spin Encoder Volts", 0).getEntry();
 
     public static final ShuffleboardLayout states = driveTab.getLayout("States", BuiltInLayouts.kGrid);
 }

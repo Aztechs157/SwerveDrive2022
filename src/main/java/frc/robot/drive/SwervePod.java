@@ -34,6 +34,7 @@ public class SwervePod {
         motorRoll = new CANSparkMax(config.motorRollId, MotorType.kBrushless);
         motorSpin = new CANSparkMax(config.motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
+        // TODO motorRoll is using SPIN_ROTATIONS_PER_FOOT
         motorRoll.getEncoder().setPositionConversionFactor(Constants.SPIN_ROTATIONS_PER_FOOT);
         motorRoll.setIdleMode(Constants.ROLL_IDLE_MODE);
         motorSpin.setIdleMode(Constants.SPIN_IDLE_MODE);
@@ -84,6 +85,7 @@ public class SwervePod {
 
     private double getCurrentSpin() {
         final var volts = encoderSpin.getPosition();
+        Shuffle.spinVolts.setNumber(volts);
         final var degrees = wrapDegrees(volts * Constants.VOLTS_TO_DEGREES);
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);

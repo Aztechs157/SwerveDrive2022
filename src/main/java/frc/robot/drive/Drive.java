@@ -15,7 +15,7 @@ import frc.robot.Constants;
 import frc.robot.Shuffle;
 
 public class Drive extends SubsystemBase {
-    public SwervePod swervePod = new SwervePod(Constants.FRONT_LEFT_CONFIG);
+    public SwervePod swervePod = new SwervePod(Constants.FRONT_RIGHT_CONFIG);
 
     public void set(final ChassisSpeeds speeds) {
         final var states = kinematics.toSwerveModuleStates(speeds);
