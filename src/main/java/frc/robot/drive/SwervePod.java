@@ -88,6 +88,7 @@ public class SwervePod {
 
     private double getCurrentSpin() {
         final var volts = encoderSpin.getPosition();
+        table.getEntry("Encoder Volts").setDouble(volts);
         final var degrees = wrapDegrees(volts * Constants.SPIN_ENCODER_VOLTS_TO_DEGREES);
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);

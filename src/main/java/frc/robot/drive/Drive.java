@@ -7,8 +7,6 @@ package frc.robot.drive;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,29 +28,11 @@ public class Drive extends SubsystemBase {
         final var states = kinematics.toSwerveModuleStates(speeds);
 
         for (var i = 0; i < states.length; i++) {
-            this.speeds[i].setNumber(states[i].speedMetersPerSecond);
-            this.angles[i].setNumber(states[i].angle.getDegrees());
-
             swervePods[i].set(states[i]);
         }
     }
 
-    private final NetworkTableEntry[] speeds = new NetworkTableEntry[] { null, null, null, null };
-    private final NetworkTableEntry[] angles = new NetworkTableEntry[] { null, null, null, null };;
-    {
-        final var labels = new String[] { "Front Left", "Front Right", "Back Left", "Back Right" };
-
-        for (var i = 0; i < labels.length; i++) {
-            final var layout = Shuffle.states.getLayout(labels[i], BuiltInLayouts.kList).withPosition(i, 0);
-
-            speeds[i] = layout.add("Speed", 0).getEntry();
-            angles[i] = layout.add("Angle", 0).getEntry();
-        }
-    }
-
     public void set(final SwerveModuleState state) {
-        this.speeds[chooser.getSelected()].setNumber(state.speedMetersPerSecond);
-        this.angles[chooser.getSelected()].setNumber(state.angle.getDegrees());
         swervePods[chooser.getSelected()].set(state);
     }
 
