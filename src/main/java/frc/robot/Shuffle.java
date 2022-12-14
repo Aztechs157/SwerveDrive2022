@@ -1,6 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -17,4 +19,7 @@ public class Shuffle {
     public static final NetworkTableEntry spinVolts = driveTab.add("Spin Encoder Volts", 0).getEntry();
 
     public static final ShuffleboardLayout states = driveTab.getLayout("States", BuiltInLayouts.kGrid);
+
+    public static final NetworkTable podsTable = NetworkTableInstance.getDefault()
+            .getTable("/FRC157/Pods");
 }

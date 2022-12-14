@@ -15,11 +15,14 @@ import frc.robot.Constants;
 import frc.robot.Shuffle;
 
 public class Drive extends SubsystemBase {
+
     public SwervePod[] swervePods = new SwervePod[] {
-            new SwervePod(Constants.FRONT_LEFT_CONFIG),
-            new SwervePod(Constants.FRONT_RIGHT_CONFIG),
-            new SwervePod(Constants.BACK_LEFT_CONFIG),
-            new SwervePod(Constants.BACK_RIGHT_CONFIG),
+            new SwervePod(Constants.FRONT_LEFT_CONFIG, Shuffle.podsTable.getSubTable("Front Left")),
+            new SwervePod(Constants.FRONT_RIGHT_CONFIG, Shuffle.podsTable.getSubTable(
+                    "Front Right")),
+            new SwervePod(Constants.BACK_LEFT_CONFIG, Shuffle.podsTable.getSubTable(
+                    "Back Left")),
+            new SwervePod(Constants.BACK_RIGHT_CONFIG, Shuffle.podsTable.getSubTable("Back Right")),
 
     };
 

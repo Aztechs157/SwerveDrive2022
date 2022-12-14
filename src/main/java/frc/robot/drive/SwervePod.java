@@ -8,8 +8,8 @@ import com.revrobotics.SparkMaxAnalogSensor.Mode;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTable;
 import frc.robot.Constants;
-import frc.robot.Shuffle;
 
 import static frc.robot.lib.ExpectDouble.expect;
 
@@ -26,13 +26,12 @@ public class SwervePod {
 
     private final CANSparkMax motorRoll;
     private final CANSparkMax motorSpin;
-
-    public boolean debug = false;
-
     // Lamprey1 Absolute Encoder
     private final SparkMaxAnalogSensor encoderSpin;
+    private final NetworkTable table;
 
-    public SwervePod(final Config config) {
+    public SwervePod(final Config config, final NetworkTable table) {
+        this.table = table;
         motorRoll = new CANSparkMax(config.motorRollId, MotorType.kBrushless);
         motorSpin = new CANSparkMax(config.motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
@@ -62,6 +61,9 @@ public class SwervePod {
     private boolean reversed = false;
 
     private void roll(double speed) {
+        table.getEntry("Input Speed").setDouble(speed);
+        table.getEntry("Roll Reversed?").setBoolean(reversed);
+
         if (reversed) {
             speed = -speed;
         }
@@ -86,15 +88,10 @@ public class SwervePod {
 
     private double getCurrentSpin() {
         final var volts = encoderSpin.getPosition();
-        if (debug) {
-            Shuffle.spinVolts.setNumber(volts);
-        }
         final var degrees = wrapDegrees(volts * Constants.SPIN_ENCODER_VOLTS_TO_DEGREES);
 
         expect(degrees).greaterOrEqual(0).lessOrEqual(360);
-        if (debug) {
-            Shuffle.encoderSpin.setNumber(degrees);
-        }
+        table.getEntry("Encoder Degrees").setDouble(degrees);
         return degrees;
     }
 
@@ -103,21 +100,10 @@ public class SwervePod {
     }
 
     private void spin(final double target) {
+        table.getEntry("Input Angle").setDouble(target);
         final var initialDelta = computeInitialDelta(target);
-        if (debug) {
-            Shuffle.initialDelta.setNumber(initialDelta);
-        }
-
         final var shortestDelta = computeShortestDelta(initialDelta);
-        if (debug) {
-            Shuffle.shortestDelta.setNumber(shortestDelta);
-            Shuffle.direction.setBoolean(!reversed);
-        }
-
         final var pidOutput = computeSpinPidOutput(shortestDelta);
-        if (debug) {
-            Shuffle.pidOutput.setNumber(pidOutput);
-        }
         directSpin(pidOutput);
     }
 
