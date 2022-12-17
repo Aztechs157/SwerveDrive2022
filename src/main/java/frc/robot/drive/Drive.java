@@ -4,9 +4,12 @@
 
 package frc.robot.drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -23,6 +26,12 @@ public class Drive extends SubsystemBase {
             new SwervePod(Constants.BACK_RIGHT_CONFIG, Shuffle.podsTable.getSubTable("Back Right")),
 
     };
+
+    public ADXRS450_Gyro gyro = new ADXRS450_Gyro(Port.kOnboardCS0);
+
+    public Rotation2d getRotation() {
+        return gyro.getRotation2d();
+    }
 
     public void set(final ChassisSpeeds speeds) {
         final var states = kinematics.toSwerveModuleStates(speeds);
