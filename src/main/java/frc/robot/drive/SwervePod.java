@@ -35,21 +35,24 @@ public class SwervePod {
         motorRoll = new CANSparkMax(config.motorRollId, MotorType.kBrushless);
         motorSpin = new CANSparkMax(config.motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
+
         motorRoll.getEncoder().setPositionConversionFactor(Constants.ROLL_ROTATIONS_PER_FOOT);
         motorRoll.setIdleMode(Constants.ROLL_IDLE_MODE);
+        motorRoll.setInverted(false);
         motorSpin.setIdleMode(Constants.SPIN_IDLE_MODE);
+        motorSpin.setInverted(false);
     }
 
     public void set(final SwerveModuleState state) {
-        roll(state.speedMetersPerSecond);
         spin(wrapDegrees(state.angle.getDegrees()));
+        roll(state.speedMetersPerSecond);
     }
 
     public void directSet(final double rollSpeed, final double spinSpeed) {
         getCurrentSpin();
 
-        roll(rollSpeed);
         directSpin(spinSpeed);
+        roll(rollSpeed);
     }
 
     public void stop() {
@@ -65,6 +68,14 @@ public class SwervePod {
         table.getEntry("Roll Reversed?").setBoolean(reversed);
 
         if (reversed) {
+            speed = -speed;
+        }
+
+        final var inverted = table.getEntry("Inverted");
+        if (!inverted.exists()) {
+            inverted.setBoolean(false);
+        }
+        if (inverted.getBoolean(false)) {
             speed = -speed;
         }
 
@@ -145,11 +156,9 @@ public class SwervePod {
     }
 
     private final PIDController spinPid = new PIDController(Constants.SPIN_KP, 0, 0);
-    private final SlewRateLimiter spinSlewRate = new SlewRateLimiter(Constants.SPIN_SLEW_RATE);
 
     private double computeSpinPidOutput(final double shortestDelta) {
         final var pidOutput = spinPid.calculate(getCurrentSpin() + shortestDelta, getCurrentSpin());
-        final var slewOutput = spinSlewRate.calculate(pidOutput);
-        return slewOutput;
+        return pidOutput;
     }
 }

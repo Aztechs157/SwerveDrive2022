@@ -31,12 +31,10 @@ public final class Constants {
 
     public static final double SPIN_ENCODER_VOLTS_TO_DEGREES = 360 / 3.3;
 
-    public static final double TELEOP_ROLL_SPEED = 1.0 / 3 / 3;
+    public static final double TELEOP_ROLL_SPEED = 0.50;
     public static final double TELEOP_AXIS_THRESHOLD = 0.1;
-    public static final double TELEOP_SPIN_SPEED = 1.0 / 3 / 3;
-
+    public static final double TELEOP_SPIN_SPEED = 10;
     public static final double ROLL_SLEW_RATE = 1;
-    public static final double SPIN_SLEW_RATE = 1;
     public static final double SPIN_KP = 0.0025;
 
     public static final IdleMode ROLL_IDLE_MODE = IdleMode.kBrake;

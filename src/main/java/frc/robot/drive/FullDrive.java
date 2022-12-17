@@ -23,9 +23,9 @@ public class FullDrive extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        final var x = joystick.getRawAxis(0) * Constants.TELEOP_ROLL_SPEED;
-        final var y = joystick.getRawAxis(1) * Constants.TELEOP_ROLL_SPEED;
-        final var r = joystick.getRawAxis(4) * Constants.TELEOP_SPIN_SPEED;
+        final var x = joystick.getRawAxis(1) * Constants.TELEOP_ROLL_SPEED;
+        final var y = joystick.getRawAxis(0) * Constants.TELEOP_ROLL_SPEED;
+        final var r = joystick.getRawAxis(2) * Constants.TELEOP_SPIN_SPEED;
 
         final var speeds = new ChassisSpeeds(x, y, Math.toRadians(r));
         drive.set(speeds);
