@@ -25,7 +25,7 @@ public final class Constants {
     public static final SwervePod.Config FRONT_LEFT_CONFIG = new SwervePod.Config(1, 2);
     public static final SwervePod.Config FRONT_RIGHT_CONFIG = new SwervePod.Config(3, 4);
     public static final SwervePod.Config BACK_LEFT_CONFIG = new SwervePod.Config(5, 6);
-    public static final SwervePod.Config BACK_RIGHT_CONFIG = new SwervePod.Config(7, 8);
+    public static final SwervePod.Config BACK_RIGHT_CONFIG = new SwervePod.Config(7, 8).inverted();
 
     public static final int JOYSTICK_ID = 0;
 

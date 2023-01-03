@@ -17,10 +17,16 @@ public class SwervePod {
     public static class Config {
         public final int motorSpinId;
         public final int motorRollId;
+        public boolean inverted = false;
 
         public Config(final int motorSpinId, final int motorRollId) {
             this.motorSpinId = motorSpinId;
             this.motorRollId = motorRollId;
+        }
+
+        public Config inverted() {
+            inverted = true;
+            return this;
         }
     }
 
@@ -35,6 +41,8 @@ public class SwervePod {
         motorRoll = new CANSparkMax(config.motorRollId, MotorType.kBrushless);
         motorSpin = new CANSparkMax(config.motorSpinId, MotorType.kBrushless);
         encoderSpin = motorSpin.getAnalog(Mode.kAbsolute);
+
+        table.getEntry("Inverted").setBoolean(config.inverted);
 
         motorRoll.getEncoder().setPositionConversionFactor(Constants.ROLL_ROTATIONS_PER_FOOT);
         motorRoll.setIdleMode(Constants.ROLL_IDLE_MODE);
@@ -72,9 +80,6 @@ public class SwervePod {
         }
 
         final var inverted = table.getEntry("Inverted");
-        if (!inverted.exists()) {
-            inverted.setBoolean(false);
-        }
         if (inverted.getBoolean(false)) {
             speed = -speed;
         }
