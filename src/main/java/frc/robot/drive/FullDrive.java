@@ -33,7 +33,7 @@ public class FullDrive extends CommandBase {
     }
 
     public double deadZone(final double input) {
-        if (input < Constants.TELEOP_AXIS_THRESHOLD) {
+        if (Math.abs(input) < Constants.TELEOP_AXIS_THRESHOLD) {
             return 0;
         }
         return input;
